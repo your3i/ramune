@@ -1,0 +1,11 @@
+imports: []
+rules:
+    - {expected: URL, patterns: [url]}
+    - {expected: SNS, patterns: [sns]}
+    - {expected: ソーシャルネットワーク, patterns: []}
+    - {expected: キーワード, patterns: [keyword]}
+    - {expected: シェア, patterns: []}
+    - {expected: シェアする, patterns: []}
+    - {expected: ユーザー, patterns: [ユーザ]}
+    - {expected: ログイン, patterns: [サインイン]}
+    - {expected: ログアウト, patterns: [サインアウト]}

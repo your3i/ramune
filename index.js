@@ -1,6 +1,7 @@
 const { App } = require('@slack/bolt');
 const TextLintEngine = require("textlint").TextLintEngine;
 const path = require("path");
+const builder = require("./rules_builder.js");
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -10,8 +11,40 @@ const app = new App({
 const engine = new TextLintEngine();
 
 app.event('app_home_opened', ({ event, say }) => {
-  say(`hi`);
+  say('hi!');
+  builder.exec();
+  // say({
+  //   blocks:[{
+  //     "type": "section",
+  //     "text": {
+  //       "type": "mrkdwn",
+  //       "text": "Hello!"
+  //     }
+  //   },
+  //   {
+  //     "type": "divider"
+  //   },
+  //   {
+  //     "type": "actions",
+  //     "elements": [
+  //       {
+  //         "type": "button",
+  //         "text": {
+  //           "type": "plain_text",
+  //           "text": "Rebuild rules",
+  //           "emoji": true
+  //         },
+  //         "action_id": "action_rebuild_rules"
+  //       }
+  //     ]
+  //   }]
+  // });
 });
+
+// app.action('action_rebuild_rules', async ({ ack, say }) => {
+//   ack();
+//   say('ok');
+// });
 
 app.message(/.*/, ({ message, say }) => {
   let results = engine.executeOnText(message.text).then(function(results){
@@ -31,6 +64,7 @@ app.message(/.*/, ({ message, say }) => {
     }
   });
 });
+
 
 // Start your app
 (async () => {

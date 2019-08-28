@@ -2,7 +2,7 @@
   "filters": {},
   "rules": {
     "prh": {
-      "rulePaths": ["prh.yml"]
+      "rulePaths": ["./prh.yml"]
     }
   }
 }
