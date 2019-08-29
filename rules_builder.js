@@ -2,31 +2,36 @@ const gsjson = require('google-spreadsheet-to-json');
 const YAML = require('yamljs');
 const fs = require('fs');
 
-const sheets = [2, 3, 4];
+const sheets = [2, 3];
 
 exports.exec = function() {
   var outputs = [];
   
-  for (const sheetId of sheets) {
-    const output = "./prh-rules/" + sheetId + ".yml"
-    
-    gsjson({
-      spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
-      worksheet: sheetId,
-      beautify: false
-    })
-    .then(function(result) {
-        // console.log(result.length);
-        // console.log(result);
-        jsonToYml(result, output);
-        outputs.push(output);
-        importRules(outputs);
-    })
-    .catch(function(err) {
-        console.log(err.message);
-        console.log(err.stack);
-    });
-  }
+  for(let i = 0; i < sheets.length; i++) {
+      const sheetId = sheets[i];
+      const output = "./prh-rules/" + sheetId + ".yml"
+      
+      gsjson({
+        spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
+        worksheet: sheetId,
+        beautify: false
+      })
+      .then(function(result) {
+          // console.log(result.length);
+          // console.log(result);
+          jsonToYml(result, output);
+          outputs.push(output);
+        
+          if (i === sheets.length - 1) {
+            console.log('ok');
+            importRules(outputs);
+          }
+      })
+      .catch(function(err) {
+          console.log(err.message);
+          console.log(err.stack);
+      });
+    }
 };
 
 function jsonToYml(data, output) {

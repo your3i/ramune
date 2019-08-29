@@ -1,5 +1,4 @@
 version: 1
 imports:
-    - ./prh-rules/3.yml
-    - ./prh-rules/4.yml
     - ./prh-rules/2.yml
+    - ./prh-rules/3.yml
