@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { App } = require('@slack/bolt');
 const TextLintEngine = require("textlint").TextLintEngine;
 const path = require("path");
@@ -68,7 +70,7 @@ app.message(/.*/, ({ message, say }) => {
 
 // Start your app
 (async () => {
-  await app.start(process.env.PORT || 3000);
+  await app.start(process.env.PORT || 4390);
   console.log('⚡️ Bolt app is running!');
 })();
 
