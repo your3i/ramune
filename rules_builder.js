@@ -1,6 +1,8 @@
 const gsjson = require('google-spreadsheet-to-json');
-const YAML = require('yamljs');
+const yaml = require('js-yaml');
 const fs = require('fs');
+
+const prh_file = './prh.yml';
 
 const sheets = [2, 3];
 
@@ -10,6 +12,7 @@ exports.exec = function() {
   for(let i = 0; i < sheets.length; i++) {
       const sheetId = sheets[i];
       const output = "./prh-rules/" + sheetId + ".yml"
+	  outputs.push(output);
       
       gsjson({
         spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
@@ -19,68 +22,56 @@ exports.exec = function() {
       .then(function(result) {
           // console.log(result.length);
           // console.log(result);
-          jsonToYml(result, output);
-          outputs.push(output);
-        
-          if (i === sheets.length - 1) {
-            console.log('ok');
-            importRules(outputs);
-          }
+          buildYmlRuleFile(result, output);
       })
       .catch(function(err) {
           console.log(err.message);
           console.log(err.stack);
       });
     }
+	
+	importRuleFiles(outputs);
 };
 
-function jsonToYml(data, output) {
+function buildYmlRuleFile(data, output) {
   var rules = [];
   
   for (const json of data) {
-    var patterns = [];
-    
-    if (json.wrongPatterns != undefined) {
-      patterns = json.wrongPatterns.split(',').map(x => x.trim());
-    }
-    
-    const rule = {
-      "expected": json.term,
-      "patterns": patterns
-    };
-    
-    rules.push(rule);
+	if (json.wrongPatterns === undefined) {
+	  continue;
+	}
+	var patterns = json.wrongPatterns.split(',').map(x => x.trim());
+	var rule = {
+		"expected": json.term,
+		"patterns": patterns
+	};
+	rules.push(rule);
   }
   
-  var content = YAML.stringify({
-    "imports": [],
-    "rules": rules
+  const content = yaml.safeDump({
+	  "imports": [],
+	  "rules": rules
   });
-  
-  console.log(content);
   
   fs.writeFile(output, content, { encoding: 'utf8', flag: 'w+' }, function(err) {
     if(err) {
         return console.log(err);
     }
-
-    console.log("The file was saved!");
+    console.log(`${output} is generate!`);
   });
 };
 
-function importRules(ymls) {
-  var content = YAML.stringify({
+function importRuleFiles(ymls) {
+  var content = yaml.safeDump({
     "version": 1,
     "imports": ymls
   });
   
-  console.log(content);
-  
-  fs.writeFile('./prh.yml', content, { encoding: 'utf8', flag: 'w+' }, function(err) {
+  fs.writeFile(prh_file, content, { encoding: 'utf8', flag: 'w+' }, function(err) {
     if(err) {
         return console.log(err);
     }
 
-    console.log("The file was saved!");
+    console.log(`${prh_file} is populated!`);
   });
 }

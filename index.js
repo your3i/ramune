@@ -12,9 +12,10 @@ const app = new App({
 
 const engine = new TextLintEngine();
 
+builder.exec();
+
 app.event('app_home_opened', ({ event, say }) => {
-  say('hi!');
-  builder.exec();
+  say('hiiii!');
   // say({
   //   blocks:[{
   //     "type": "section",
@@ -52,7 +53,7 @@ app.message(/.*/, ({ message, say }) => {
   let results = engine.executeOnText(message.text).then(function(results){
     if (engine.isErrorResults(results)) {
       const output = engine.formatResults(results);
-      
+
       var lintResult = '```';
       results.forEach(function(element) {
         element.messages.forEach(function(message) {

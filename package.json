@@ -16,6 +16,6 @@
     "google-spreadsheet-to-json": "^1.0.0",
     "textlint": "^11.3.1",
     "textlint-rule-prh": "^5.2.0",
-    "yamljs": "^0.3.0"
+    "js-yaml": "^3.13.1"
   }
 }

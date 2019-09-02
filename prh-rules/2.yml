@@ -1,5 +1,9 @@
 imports: []
 rules:
-    - {expected: イラスト, patterns: []}
-    - {expected: オリジナル, patterns: [original, オレジナル]}
-    - {expected: マンガ, patterns: [manga]}
+  - expected: オリジナル
+    patterns:
+      - original
+      - オレジナル
+  - expected: マンガ
+    patterns:
+      - manga
