@@ -1,77 +1,69 @@
 require('dotenv').config();
 
 const { App } = require('@slack/bolt');
-const TextLintEngine = require("textlint").TextLintEngine;
-const path = require("path");
-const builder = require("./rules_builder.js");
+const TextLintEngine = require('textlint').TextLintEngine;
+const builder = require('./rules_builder.js');
 
 const app = new App({
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
-  token: process.env.SLACK_BOT_TOKEN
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    token: process.env.SLACK_BOT_TOKEN
 });
 
 const engine = new TextLintEngine();
 
 builder.exec();
 
-app.event('app_home_opened', ({ event, say }) => {
-  say('hiiii!');
-  // say({
-  //   blocks:[{
-  //     "type": "section",
-  //     "text": {
-  //       "type": "mrkdwn",
-  //       "text": "Hello!"
-  //     }
-  //   },
-  //   {
-  //     "type": "divider"
-  //   },
-  //   {
-  //     "type": "actions",
-  //     "elements": [
-  //       {
-  //         "type": "button",
-  //         "text": {
-  //           "type": "plain_text",
-  //           "text": "Rebuild rules",
-  //           "emoji": true
-  //         },
-  //         "action_id": "action_rebuild_rules"
-  //       }
-  //     ]
-  //   }]
-  // });
+app.event('app_home_opened', ({event,say}) => {
+    say('Hi!');
 });
 
-// app.action('action_rebuild_rules', async ({ ack, say }) => {
-//   ack();
-//   say('ok');
-// });
+app.event('app_mention', async({event,context}) => {
+    const message = event.text;
+    const mention = `<@${context.botUserId}>`;
+    const text = message.replace(mention, '');
+    const report = await lint(text);
 
-app.message(/.*/, ({ message, say }) => {
-  let results = engine.executeOnText(message.text).then(function(results){
-    if (engine.isErrorResults(results)) {
-      const output = engine.formatResults(results);
+    var reply = {
+        token: context.botToken,
+        channel: event.channel,
+        text: report
+    };
 
-      var lintResult = '```';
-      results.forEach(function(element) {
-        element.messages.forEach(function(message) {
-          lintResult += `\n${message.line}行目: ${message.message}`;
-        });
-      });
-      lintResult += '\n```';
-      say(lintResult)
-    } else {
-      say("All Passed!");
+    if (event.thread_ts !== undefined) {
+        reply['thread_ts'] = event.thread_ts;
     }
-  });
+
+    try {
+        const result = await app.client.chat.postMessage(reply);
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
+async function lint(text) {
+    let results = await engine.executeOnText(text);
+    var report = '';
 
-// Start your app
-(async () => {
-  await app.start(process.env.PORT || 4390);
-  console.log('⚡️ Bolt app is running!');
+    if (engine.isErrorResults(results)) {
+        const output = engine.formatResults(results);
+        report += '表記ゆれが見つかりました！👀';
+        report += '\n```';
+        results.forEach(function(element) {
+            element.messages.forEach(function(message) {
+                report += `\n${message.line}行目: ${message.message}`;
+            });
+        });
+        report += '\n```';
+
+    } else {
+        report = '大丈夫そう！👍';
+    }
+
+    return report;
+}
+
+(async() => {
+    await app.start(process.env.PORT || 4390);
+    console.log('⚡️ Bolt app is running!');
 })();
-
