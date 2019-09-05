@@ -19,7 +19,9 @@ const helpMessage = `
 \`\`\`
 ${mention} (text) で表記ゆれチェックを行います。
 ${mention} (--command) でコマンドを実行します。
+（DMの場合は、${mention} なしで〜！）
 
+[Options]
 ${command.help}: ヘルプ
 ${command.spreadsheet}: スプレットシートのリンクをみる
 ${command.reload}: スプレットシートからルールをリロードする
@@ -43,6 +45,16 @@ const app = new App({
 const engine = new TextLintEngine();
 builder.exec();
 
+app.event('app_home_opened', ({event,say}) => {
+    say('Hi! Type `--help` to view help.');
+});
+
+app.message(/.*/, ({ message, say }) => {
+    makeResponse(message.text).then( response => {
+        say(response);
+    });
+});
+
 app.event('app_mention', async({
     event,
     context
@@ -50,24 +62,7 @@ app.event('app_mention', async({
     const message = event.text;
     const mention = `<@${context.botUserId}>`;
     const text = message.replace(mention, '');
-
-    var response = '';
-
-    switch (text.trim()) {
-        case ``:
-        case `${command.help}`:
-            response = helpMessage;
-            break;
-        case `${command.spreadsheet}`:
-            response = spreadsheetMessage;
-            break;
-        case `${command.reload}`:
-            builder.exec();
-            response = reloadMessage;
-            break;
-        default:
-            response = await lint(text);
-    }
+    const response = await makeResponse(text);
 
     var reply = {
         token: context.botToken,
@@ -86,6 +81,28 @@ app.event('app_mention', async({
         console.error(error);
     }
 });
+
+async function makeResponse(text) {
+    var response = '';
+
+    switch (text.trim()) {
+        case ``:
+        case `${command.help}`:
+            response = helpMessage;
+            break;
+        case `${command.spreadsheet}`:
+            response = spreadsheetMessage;
+            break;
+        case `${command.reload}`:
+            builder.exec();
+            response = reloadMessage;
+            break;
+        default:
+            response = await lint(text);
+    }
+
+    return response;
+}
 
 async function lint(text) {
     let results = await engine.executeOnText(text);

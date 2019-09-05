@@ -7,3 +7,4 @@ rules:
   - expected: マンガ
     patterns:
       - manga
+      - 漫画
