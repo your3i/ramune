@@ -5,7 +5,35 @@ const {
 } = require('@slack/bolt');
 const TextLintEngine = require('textlint').TextLintEngine;
 const builder = require('./rules_builder.js');
+
 const spreadsheet = 'https://docs.google.com/spreadsheets/d/1Y6aKcp2lI-pCz-dk-b-Lh921VnV5gUkjwdA4NJ0szjQ/edit#gid=681876907';
+const mention = '@ramune';
+
+const command = {
+    help: '--help',
+    spreadsheet: '--spreadsheet',
+    reload: '--reload'
+}
+
+const helpMessage = `
+\`\`\`
+${mention} (text) で表記ゆれチェックを行います。
+${mention} (--command) でコマンドを実行します。
+
+${command.help}: ヘルプ
+${command.spreadsheet}: スプレットシートのリンクをみる
+${command.reload}: スプレットシートからルールをリロードする
+\`\`\`
+`;
+
+const spreadsheetMessage = `
+スプレットシートはこちらです〜！👇
+\`\`\`
+${spreadsheet}
+\`\`\`
+`;
+
+const reloadMessage = `ルールをリロードしました〜！🚀`;
 
 const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -15,25 +43,6 @@ const app = new App({
 const engine = new TextLintEngine();
 builder.exec();
 
-
-
-/*
-
-[Commands]
-- spreadsheet spreadsheetのURLを返す
-- reload spreadsheetからルールをリロードする
-*/
-
-app.event('app_home_opened', ({
-    event,
-    say
-}) => {
-    var hello_message = 'こんにちは！コマンドはこちらです〜\n';
-    hello_message += '\n`spreadsheet` spreadsheetのURLを返す';
-    hello_message += '\n`reload` spreadsheetからルールをリロードする';
-    say(hello_message);
-});
-
 app.event('app_mention', async({
     event,
     context
@@ -41,12 +50,29 @@ app.event('app_mention', async({
     const message = event.text;
     const mention = `<@${context.botUserId}>`;
     const text = message.replace(mention, '');
-    const report = await lint(text);
+
+    var response = '';
+
+    switch (text.trim()) {
+        case ``:
+        case `${command.help}`:
+            response = helpMessage;
+            break;
+        case `${command.spreadsheet}`:
+            response = spreadsheetMessage;
+            break;
+        case `${command.reload}`:
+            builder.exec();
+            response = reloadMessage;
+            break;
+        default:
+            response = await lint(text);
+    }
 
     var reply = {
         token: context.botToken,
         channel: event.channel,
-        text: report
+        text: response
     };
 
     if (event.thread_ts !== undefined) {
@@ -82,25 +108,6 @@ async function lint(text) {
 
     return report;
 }
-
-app.message('reload', async({
-    message,
-    say
-}) => {
-    builder.exec();
-    say('ルールをリロードしました〜！🚀');
-});
-
-app.message('spreadsheet', async({
-    message,
-    say
-}) => {
-    var reply = 'スプレットシートはこちらです〜！👇';
-    reply += '\n```';
-    reply += `${spreadsheet}`;
-    reply += '\n```';
-    say(reply);
-});
 
 (async() => {
     await app.start(process.env.PORT || 4390);
