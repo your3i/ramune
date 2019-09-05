@@ -45,12 +45,18 @@ const app = new App({
 const engine = new TextLintEngine();
 builder.exec();
 
-app.event('app_home_opened', ({event,say}) => {
-    say('Hi! Type `--help` to view help.');
+app.event('app_home_opened', ({
+    event,
+    say
+}) => {
+    say('Hi! Send `--help` to view help.');
 });
 
-app.message(/.*/, ({ message, say }) => {
-    makeResponse(message.text).then( response => {
+app.message(/.*/, ({
+    message,
+    say
+}) => {
+    makeResponse(message.text).then(response => {
         say(response);
     });
 });
