@@ -13,9 +13,10 @@
   "dependencies": {
     "@slack/bolt": "^1.2.0",
     "dotenv": "^8.1.0",
+    "google-spreadsheet": "^2.0.8",
     "google-spreadsheet-to-json": "^1.0.0",
+    "js-yaml": "^3.13.1",
     "textlint": "^11.3.1",
-    "textlint-rule-prh": "^5.2.0",
-    "js-yaml": "^3.13.1"
+    "textlint-rule-prh": "^5.2.0"
   }
 }

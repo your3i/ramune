@@ -1,0 +1,10 @@
+imports: []
+rules:
+  - expected: オリジナル
+    patterns:
+      - original
+      - オレジナル
+  - expected: マンガ
+    patterns:
+      - manga
+      - 漫画

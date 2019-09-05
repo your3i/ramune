@@ -1,0 +1,30 @@
+imports: []
+rules:
+  - expected: pixiv
+    patterns:
+      - Pixiv
+  - expected: pixiv PAY
+    patterns:
+      - pixiv pay
+      - pixivpay
+  - expected: pixivFANBOX
+    patterns:
+      - pixiv fanbox
+      - pixiv Fanbox
+      - pixiv FANBOX
+  - expected: Twitter
+    patterns:
+      - twitter
+  - expected: Facebook
+    patterns:
+      - facebook
+  - expected: pixivプレミアム
+    patterns:
+      - pixiv premium
+  - expected: Pawoo
+    patterns:
+      - pawoo
+  - expected: APOLLO
+    patterns:
+      - apollo
+      - Apollo
