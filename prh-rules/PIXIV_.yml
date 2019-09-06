@@ -1,30 +1,30 @@
 imports: []
 rules:
-  - expected: "pixiv"
+  - expected: /"pixiv/"
     patterns:
-      - "Pixiv"
-  - expected: "pixiv PAY"
+      - /"Pixiv/"
+  - expected: /"pixiv PAY/"
     patterns:
-      - "pixiv pay"
-      - "pixivpay"
-  - expected: "pixivFANBOX"
+      - /"pixiv pay/"
+      - /"pixivpay/"
+  - expected: /"pixivFANBOX/"
     patterns:
-      - "pixiv fanbox"
-      - "pixiv Fanbox"
-      - "pixiv FANBOX"
-  - expected: "Twitter"
+      - /"pixiv fanbox/"
+      - /"pixiv Fanbox/"
+      - /"pixiv FANBOX/"
+  - expected: /"Twitter/"
     patterns:
-      - "twitter"
-  - expected: "Facebook"
+      - /"twitter/"
+  - expected: /"Facebook/"
     patterns:
-      - "facebook"
-  - expected: "pixivプレミアム"
+      - /"facebook/"
+  - expected: /"pixivプレミアム/"
     patterns:
-      - "pixiv premium"
-  - expected: "Pawoo"
+      - /"pixiv premium/"
+  - expected: /"Pawoo/"
     patterns:
-      - "pawoo"
-  - expected: "APOLLO"
+      - /"pawoo/"
+  - expected: /"APOLLO/"
     patterns:
-      - "apollo"
-      - "Apollo"
+      - /"apollo/"
+      - /"Apollo/"
