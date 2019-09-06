@@ -1,5 +1,4 @@
 version: 1
 imports:
-  - ./prh-rules/random new sheet.yml
   - ./prh-rules/pixiv.yml
   - ./prh-rules/PIXIV_.yml
