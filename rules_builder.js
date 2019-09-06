@@ -53,6 +53,9 @@ function buildYmlRuleFile(data, output) {
         if (json.wrongPatterns === undefined) {
             continue;
         }
+        if (json.wrongPatterns.includes('-')) {
+            continue;
+        }
         var patterns = json.wrongPatterns.split(',').map(x => x.trim());
         var rule = {
             "expected": json.term,
