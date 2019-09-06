@@ -1,5 +1,0 @@
-imports: []
-rules:
-  - expected: iOSDC
-    patterns:
-      - iosdc
