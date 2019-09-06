@@ -1,4 +1,4 @@
 version: 1
 imports:
-  - ./prh-rules/pixiv.yml
-  - ./prh-rules/PIXIV_.yml
+  - "./prh-rules/pixiv.yml"
+  - "./prh-rules/PIXIV_.yml"

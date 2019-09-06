@@ -1,6 +1,6 @@
 const gsjson = require('google-spreadsheet-to-json');
 const GoogleSpreadsheet = require('google-spreadsheet');
-const yaml = require('js-yaml');
+const YAML = require('json-to-pretty-yaml');
 const fs = require('fs');
 
 const spreadsheet = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
@@ -60,8 +60,8 @@ function buildYmlRuleFile(data, output) {
         };
         rules.push(rule);
     }
-
-    const content = yaml.safeDump({
+    
+    const content = YAML.stringify({
         "imports": [],
         "rules": rules
     });
@@ -78,7 +78,7 @@ function buildYmlRuleFile(data, output) {
 };
 
 function importRuleFiles(ymls) {
-    var content = yaml.safeDump({
+    var content = YAML.stringify({
         "version": 1,
         "imports": ymls
     });
