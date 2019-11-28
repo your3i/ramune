@@ -25,6 +25,9 @@ ${mention} (--command) でコマンドを実行します。
 ${command.help}: ヘルプ
 ${command.spreadsheet}: スプレットシートのリンクをみる
 ${command.reload}: スプレットシートからルールをリロードする
+
+[esa]
+https://pixiv.esa.io/posts/12308
 \`\`\`
 `;
 
